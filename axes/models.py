@@ -57,8 +57,7 @@ class AccessLog(AccessBase):
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
-    autologout = models.BooleanField(null=False,
-                                     default=False,
+    autologout = models.BooleanField(null=True,
                                      blank=True)
 
     def __str__(self):
