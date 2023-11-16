@@ -57,6 +57,10 @@ class AccessLog(AccessBase):
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
+    autologout = models.BooleanField(null=False,
+                                     default=False,
+                                     blank=True)
+
     def __str__(self):
         return f"Access Log for {self.username} @ {self.attempt_time}"
 
