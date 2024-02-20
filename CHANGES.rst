@@ -3,6 +3,34 @@ Changes
 =======
 
 
+6.3.0 (2023-12-27)
+------------------
+
+- Add async support to middleware.
+  [Taikono-Himazin]
+
+
+6.2.0 (2023-12-08)
+------------------
+
+- Update documentation.
+  [funkybob]
+- Add new management command ``axes_reset_ip_username``.
+  [p-l-]
+- Add French translations.
+  [laulaz]
+- Avoid running data migration on incorrect databases.
+  [christianbundy]
+
+
+6.1.1 (2023-08-01)
+------------------
+
+- Fix ``TransactionManagementError`` when using the database handler
+  with a custom database with for ``AccessAttempt`` or ``AccessFailureLog``.
+  [hirotasoshu]
+
+
 6.1.0 (2023-07-30)
 ------------------
 

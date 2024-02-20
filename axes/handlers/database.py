@@ -1,8 +1,8 @@
 from logging import getLogger
 from typing import Optional
 
-from django.db import transaction, connections
-from django.db.models import F, Sum, Value, Q
+from django.db import router, transaction, connections
+from django.db.models import F, Q, Sum, Value
 from django.db.models.functions import Concat
 from django.utils import timezone
 
@@ -174,7 +174,7 @@ class AxesDatabaseHandler(AbstractAxesHandler, AxesBaseHandler):
                 "AXES: Username is None and username is the only one lockout parameter, new record will NOT be created."
             )
         else:
-            with transaction.atomic():
+            with transaction.atomic(using=router.db_for_write(AccessAttempt)):
                 (
                     attempt,
                     created,
@@ -246,7 +246,7 @@ class AxesDatabaseHandler(AbstractAxesHandler, AxesBaseHandler):
 
         # 5. database entry: Log for ever the attempt in the AccessFailureLog
         if settings.AXES_ENABLE_ACCESS_FAILURE_LOG:
-            with transaction.atomic():
+            with transaction.atomic(using=router.db_for_write(AccessFailureLog)):
                 AccessFailureLog.objects.create(
                     username=username,
                     ip_address=request.axes_ip_address,
@@ -306,8 +306,6 @@ class AxesDatabaseHandler(AbstractAxesHandler, AxesBaseHandler):
                     cursor.execute(query)
             except (BaseException, ProgrammingError, InternalError, InFailedSqlTransaction) as e:
                 log.warning(f'Unable to set the user_id on the {tbl_name} for {username} ({user_id}): {e}')
-            except:
-                log.warning(f'Unable to set the user_id on the {tbl_name} for {username} ({user_id})')
             ##### END CouponCabin minor override to track the user ID #####
 
         if settings.AXES_RESET_ON_SUCCESS:
